@@ -104,9 +104,14 @@ jobs:
                 cargo --version
                 just --version
                 sccache --version
-                cargo fetch --locked
-                cargo check --workspace --locked
-                sccache --show-stats || true'
+
+                if [ -f Cargo.toml ]; then
+                  cargo fetch --locked
+                  cargo check --workspace --locked
+                  sccache --show-stats || true
+                else
+                  echo "No Cargo.toml found; infra smoke only."
+                fi'
 
       - name: Cleanup scratch
         if: always()
